@@ -1,50 +1,38 @@
 import 'package:flutter/material.dart';
+import 'package:project1/screens/columnscreen/column_screen.dart';
+import 'package:project1/screens/listviewscreen/listview_screen.dart';
+import 'package:project1/screens/separatedscreen/separated_screen.dart';
 
-void main() {
-  runApp(const MaterialApp(home: DeletableList()));
-}
 
-class DeletableList extends StatefulWidget {
-  const DeletableList({super.key});
+void main() => runApp(const MaterialApp(home: HomeScreen()));
+
+class HomeScreen extends StatefulWidget {
+  const HomeScreen({super.key});
 
   @override
-  State<DeletableList> createState() => _DeletableListState();
+  State<HomeScreen> createState() => _HomeScreenState();
 }
 
-class _DeletableListState extends State<DeletableList> {
-  List<String> items = List.generate(10, (index) => 'Элемент ${index + 1}');
+class _HomeScreenState extends State<HomeScreen> {
+  int index = 0;
+  final pages = [
+    const ColumnScreen(),
+    const ListViewScreen(),
+    const SeparatedScreen(),
+  ];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Список с удалением')),
-      body: ListView(
-        children: items.map((item) {
-          return Container(
-            key: ValueKey(item),
-            padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  item,
-                  style: const TextStyle(fontSize: 18),
-                ),
-                GestureDetector(
-                  onTap: () {
-                    setState(() {
-                      items.remove(item);
-                    });
-                  },
-                  child: const Icon(
-                    Icons.close,
-                    color: Colors.red,
-                  ),
-                ),
-              ],
-            ),
-          );
-        }).toList(),
+      body: pages[index],
+      bottomNavigationBar: BottomNavigationBar(
+        currentIndex: index,
+        items: const [
+          BottomNavigationBarItem(icon: Icon(Icons.vertical_align_top), label: 'Column'),
+          BottomNavigationBarItem(icon: Icon(Icons.list), label: 'ListView'),
+          BottomNavigationBarItem(icon: Icon(Icons.line_weight), label: 'Separated'),
+        ],
+        onTap: (i) => setState(() => index = i),
       ),
     );
   }
