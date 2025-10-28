@@ -1,36 +1,26 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
-import 'package:project1/screens/screen_first.dart';
-import 'package:project1/screens/screen_second.dart';
-import 'package:project1/screens/screen_third.dart';
-
+import 'package:provider/provider.dart';
+import 'features/access_requests/state/access_requests_state.dart';
+import 'features/access_requests/screens/access_requests_screen.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(
+    ChangeNotifierProvider(
+      create: (_) => AccessRequestsState(),
+      child: const AccessApp(),
+    ),
+  );
 }
 
-final GoRouter router = GoRouter(
-  routes: [
-    GoRoute(
-      path: '/',
-      builder: (context, state) => ScreenFirst(),
-    ),
-    GoRoute(
-      path: '/second',
-      builder: (context, state) => ScreenSecond(),
-    ),
-    GoRoute(
-      path: '/third',
-      builder: (context, state) => ScreenThird(),
-    ),
-  ],
-);
+class AccessApp extends StatelessWidget {
+  const AccessApp({super.key});
 
-class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp.router(
-      routerConfig: router,
+    return MaterialApp(
+      title: 'Access IDM',
+      theme: ThemeData(useMaterial3: true, colorSchemeSeed: Colors.indigo),
+      home: const AccessRequestsScreen(),
     );
   }
 }
