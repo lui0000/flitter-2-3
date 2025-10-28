@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:project1/screens/screen_third.dart';
 
 class ScreenSecond extends StatelessWidget {
+  const ScreenSecond({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
