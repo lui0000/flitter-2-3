@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:project1/screens/screen_second.dart';
 
 
 class ScreenFirst extends StatelessWidget {
@@ -10,10 +9,7 @@ class ScreenFirst extends StatelessWidget {
       body: Center(
         child: ElevatedButton(
           onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => ScreenSecond()),
-            );
+            context.push('/second');
           },
           child: Text('Перейти ко второму экрану'),
         ),

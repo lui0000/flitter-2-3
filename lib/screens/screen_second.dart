@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:project1/screens/screen_third.dart';
 
 class ScreenSecond extends StatelessWidget {
-  const ScreenSecond({super.key});
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -13,18 +10,15 @@ class ScreenSecond extends StatelessWidget {
         children: [
           ElevatedButton(
             onPressed: () {
-              Navigator.pop(context);
+              context.pop();
             },
-            child: Text('Назад на первый экран'),
+            child: Text('Назад к первому экрану'),
           ),
           ElevatedButton(
             onPressed: () {
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(builder: (context) => ScreenThird()),
-              );
+              context.replace('/third');
             },
-            child: Text('Перейти на третий экран (pushReplacement)'),
+            child: Text('Перейти на третий экран (replace)'),
           ),
         ],
       ),
