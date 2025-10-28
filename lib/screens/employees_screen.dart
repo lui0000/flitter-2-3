@@ -24,7 +24,6 @@ class EmployeesScreen extends StatelessWidget {
             title: Text(employee['name']!),
             subtitle: Text(employee['position']!),
             onTap: () {
-              // Вертикальная навигация - push
               Navigator.push(
                 context,
                 MaterialPageRoute(
@@ -74,7 +73,6 @@ class EmployeeDetailScreen extends StatelessWidget {
             const Spacer(),
             ElevatedButton(
               onPressed: () {
-                // Вертикальная навигация - pop
                 Navigator.pop(context);
               },
               child: const Text('Назад'),

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-// Страничная навигация через PageView
 class HorizontalNavigationScreen extends StatefulWidget {
   const HorizontalNavigationScreen({super.key});
 
@@ -20,7 +19,6 @@ class _HorizontalNavigationScreenState extends State<HorizontalNavigationScreen>
       ),
       body: Column(
         children: [
-          // Индикатор страниц
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -29,7 +27,6 @@ class _HorizontalNavigationScreenState extends State<HorizontalNavigationScreen>
               _buildDot(2),
             ],
           ),
-          // PageView
           Expanded(
             child: PageView(
               controller: _pageController,
