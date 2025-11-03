@@ -45,13 +45,6 @@ class HomeScreen extends StatelessWidget {
               },
               child: const Text('Настройки'),
             ),
-            const SizedBox(height: 30),
-            ElevatedButton(
-              onPressed: () {
-                Navigator.pushNamed(context, '/horizontal');
-              },
-              child: const Text('Горизонтальная навигация'),
-            ),
           ],
         ),
       ),

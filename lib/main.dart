@@ -6,7 +6,6 @@ import 'screens/home_screen.dart';
 import 'screens/employees_screen.dart';
 import 'screens/systems_screen.dart';
 import 'screens/settings_screen.dart';
-import 'screens/horizontal_navigation_screen.dart';
 
 void main() {
   runApp(
@@ -32,7 +31,6 @@ class AccessApp extends StatelessWidget {
         '/employees': (context) => const EmployeesScreen(),
         '/systems': (context) => const SystemsScreen(),
         '/settings': (context) => const SettingsScreen(),
-        '/horizontal': (context) => const HorizontalNavigationScreen(),
       },
     );
   }
