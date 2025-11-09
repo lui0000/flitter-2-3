@@ -1,23 +1,45 @@
 import 'package:flutter/material.dart';
-import '../../../core/access_requests_inherited.dart';
+import '../../../core/service_locator.dart';
+import '../state/access_requests_state.dart';
 import 'create_access_request_screen.dart';
 import '../widgets/access_request_table.dart';
 
-class AccessRequestsScreen extends StatelessWidget {
+class AccessRequestsScreen extends StatefulWidget {
   const AccessRequestsScreen({super.key});
 
-  void _deleteWithUndo(BuildContext context, String id) {
-    final inherited = AccessRequestsInherited.of(context);
-    if (inherited == null) return;
+  @override
+  State<AccessRequestsScreen> createState() => _AccessRequestsScreenState();
+}
 
-    inherited.onRemove(id);
+class _AccessRequestsScreenState extends State<AccessRequestsScreen> {
+  late final AccessRequestsState _state;
+
+  @override
+  void initState() {
+    super.initState();
+    _state = getIt<AccessRequestsState>();
+    _state.addListener(_onStateChanged);
+  }
+
+  @override
+  void dispose() {
+    _state.removeListener(_onStateChanged);
+    super.dispose();
+  }
+
+  void _onStateChanged() {
+    setState(() {});
+  }
+
+  void _deleteWithUndo(String id) {
+    _state.remove(id);
     ScaffoldMessenger.of(context).clearSnackBars();
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: const Text('Заявка удалена'),
         action: SnackBarAction(
           label: 'Отменить',
-          onPressed: () => inherited.onUndoRemove(),
+          onPressed: () => _state.undoRemove(),
         ),
       ),
     );
@@ -25,19 +47,12 @@ class AccessRequestsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final inherited = AccessRequestsInherited.of(context);
-    if (inherited == null) {
-      return const Scaffold(
-        body: Center(child: Text('Ошибка: нет доступа к данным')),
-      );
-    }
-
     return Scaffold(
       appBar: AppBar(title: const Text('Система выдачи доступов')),
       body: AccessRequestTable(
-        items: inherited.items,
-        onToggleApproval: inherited.onToggleApproval,
-        onDelete: (id) => _deleteWithUndo(context, id),
+        items: _state.items,
+        onToggleApproval: _state.toggleApproval,
+        onDelete: _deleteWithUndo,
         onItemTap: null,
       ),
       floatingActionButton: FloatingActionButton(
