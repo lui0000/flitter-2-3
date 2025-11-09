@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import '../state/access_requests_state.dart';
+import '../../../core/access_requests_inherited.dart';
 import '../models/access_request.dart';
 
 class CreateAccessRequestScreen extends StatefulWidget {
@@ -26,6 +25,9 @@ class _CreateAccessRequestScreenState extends State<CreateAccessRequestScreen> {
 
   void _submit() {
     if (!_formKey.currentState!.validate()) return;
+    final inherited = AccessRequestsInherited.of(context);
+    if (inherited == null) return;
+
     final now = DateTime.now();
     final item = AccessRequest(
       id: now.microsecondsSinceEpoch.toString(),
@@ -35,7 +37,7 @@ class _CreateAccessRequestScreenState extends State<CreateAccessRequestScreen> {
       createdAt: now,
       isApproved: false,
     );
-    context.read<AccessRequestsState>().add(item);
+    inherited.onAdd(item);
     Navigator.of(context).pop();
   }
 
