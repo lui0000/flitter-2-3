@@ -1,16 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../providers/access_requests_provider.dart';
+import '../stores/access_requests_store.dart';
 import '../models/access_request.dart';
 
-class CreateAccessRequestScreen extends ConsumerStatefulWidget {
-  const CreateAccessRequestScreen({super.key});
+class CreateAccessRequestScreen extends StatefulWidget {
+  final AccessRequestsStore store;
+
+  const CreateAccessRequestScreen({super.key, required this.store});
 
   @override
-  ConsumerState<CreateAccessRequestScreen> createState() => _CreateAccessRequestScreenState();
+  State<CreateAccessRequestScreen> createState() => _CreateAccessRequestScreenState();
 }
 
-class _CreateAccessRequestScreenState extends ConsumerState<CreateAccessRequestScreen> {
+class _CreateAccessRequestScreenState extends State<CreateAccessRequestScreen> {
   final _formKey = GlobalKey<FormState>();
   final _employeeCtrl = TextEditingController();
   final _accessTypeCtrl = TextEditingController();
@@ -36,7 +37,7 @@ class _CreateAccessRequestScreenState extends ConsumerState<CreateAccessRequestS
       createdAt: now,
       isApproved: false,
     );
-    ref.read(accessRequestsProvider.notifier).add(item);
+    widget.store.add(item);
     Navigator.of(context).pop();
   }
 

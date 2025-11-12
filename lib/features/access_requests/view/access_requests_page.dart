@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../stores/access_requests_store.dart';
 import 'access_requests_view.dart';
 
 class AccessRequestsPage extends StatelessWidget {
@@ -6,6 +7,7 @@ class AccessRequestsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const AccessRequestsView();
+    final store = AccessRequestsStore();
+    return AccessRequestsView(store: store);
   }
 }

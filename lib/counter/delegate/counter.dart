@@ -1,15 +1,15 @@
-import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:mobx/mobx.dart';
 
 part 'counter.g.dart';
 
-@riverpod
-class Counter extends _$Counter {
-  @override
-  int build() {
-    return 0;
-  }
+class Counter = _Counter with _$Counter;
 
+abstract class _Counter with Store {
+  @observable
+  int value = 0;
+
+  @action
   void increment() {
-    state = state + 1;
+    value++;
   }
 }

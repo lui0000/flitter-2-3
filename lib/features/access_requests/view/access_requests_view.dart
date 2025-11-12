@@ -1,43 +1,45 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../providers/access_requests_provider.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
+import '../stores/access_requests_store.dart';
 import '../widgets/access_request_table.dart';
 import '../screens/create_access_request_screen.dart';
 
-class AccessRequestsView extends ConsumerWidget {
-  const AccessRequestsView({super.key});
+class AccessRequestsView extends StatelessWidget {
+  final AccessRequestsStore store;
 
-  void _deleteWithUndo(BuildContext context, WidgetRef ref, String id) {
-    ref.read(accessRequestsProvider.notifier).remove(id);
+  const AccessRequestsView({super.key, required this.store});
+
+  void _deleteWithUndo(BuildContext context, String id) {
+    store.remove(id);
     ScaffoldMessenger.of(context).clearSnackBars();
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: const Text('Заявка удалена'),
         action: SnackBarAction(
           label: 'Отменить',
-          onPressed: () => ref.read(accessRequestsProvider.notifier).undoRemove(),
+          onPressed: () => store.undoRemove(),
         ),
       ),
     );
   }
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final state = ref.watch(accessRequestsProvider);
-
+  Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('Система выдачи доступов')),
-      body: AccessRequestTable(
-        items: state.items,
-        onToggleApproval: (id) => ref.read(accessRequestsProvider.notifier).toggleApproval(id),
-        onDelete: (id) => _deleteWithUndo(context, ref, id),
-        onItemTap: null,
+      body: Observer(
+        builder: (_) => AccessRequestTable(
+          items: store.items,
+          onToggleApproval: (id) => store.toggleApproval(id),
+          onDelete: (id) => _deleteWithUndo(context, id),
+          onItemTap: null,
+        ),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           Navigator.of(context).push(
             MaterialPageRoute(
-              builder: (_) => const CreateAccessRequestScreen(),
+              builder: (_) => CreateAccessRequestScreen(store: store),
             ),
           );
         },

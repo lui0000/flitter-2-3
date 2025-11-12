@@ -3,22 +3,45 @@
 part of 'counter.dart';
 
 // **************************************************************************
-// RiverpodGenerator
+// StoreGenerator
 // **************************************************************************
 
-String _$counterHash() => r'abe60789a84ae32f4edcc1fab880363084449064';
+// ignore_for_file: non_constant_identifier_names, unnecessary_brace_in_string_interps, unnecessary_lambdas, prefer_expression_function_bodies, lines_longer_than_80_chars, avoid_as, avoid_annotating_with_dynamic, no_leading_underscores_for_local_identifiers
 
-/// See also [Counter].
-@ProviderFor(Counter)
-final counterProvider = AutoDisposeNotifierProvider<Counter, int>.internal(
-  Counter.new,
-  name: r'counterProvider',
-  debugGetCreateSourceHash:
-      const bool.fromEnvironment('dart.vm.product') ? null : _$counterHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+mixin _$Counter on _Counter, Store {
+  late final _$valueAtom = Atom(name: '_Counter.value', context: context);
 
-typedef _$Counter = AutoDisposeNotifier<int>;
-// ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package
+  @override
+  int get value {
+    _$valueAtom.reportRead();
+    return super.value;
+  }
+
+  @override
+  set value(int value) {
+    _$valueAtom.reportWrite(value, super.value, () {
+      super.value = value;
+    });
+  }
+
+  late final _$_CounterActionController =
+      ActionController(name: '_Counter', context: context);
+
+  @override
+  void increment() {
+    final _$actionInfo =
+        _$_CounterActionController.startAction(name: '_Counter.increment');
+    try {
+      return super.increment();
+    } finally {
+      _$_CounterActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
+  String toString() {
+    return '''
+value: ${value}
+    ''';
+  }
+}
