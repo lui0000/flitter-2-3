@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import '../../../core/service_locator.dart';
-import '../state/access_requests_state.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import '../cubit/access_requests_cubit.dart';
 import '../models/access_request.dart';
 
 class CreateAccessRequestScreen extends StatefulWidget {
@@ -27,7 +27,7 @@ class _CreateAccessRequestScreenState extends State<CreateAccessRequestScreen> {
   void _submit() {
     if (!_formKey.currentState!.validate()) return;
 
-    final state = getIt<AccessRequestsState>();
+    final cubit = context.read<AccessRequestsCubit>();
     final now = DateTime.now();
     final item = AccessRequest(
       id: now.microsecondsSinceEpoch.toString(),
@@ -37,7 +37,7 @@ class _CreateAccessRequestScreenState extends State<CreateAccessRequestScreen> {
       createdAt: now,
       isApproved: false,
     );
-    state.add(item);
+    cubit.add(item);
     Navigator.of(context).pop();
   }
 
