@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import '../cubit/access_requests_cubit.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../providers/access_requests_provider.dart';
 import '../models/access_request.dart';
 
-class CreateAccessRequestScreen extends StatefulWidget {
+class CreateAccessRequestScreen extends ConsumerStatefulWidget {
   const CreateAccessRequestScreen({super.key});
 
   @override
-  State<CreateAccessRequestScreen> createState() => _CreateAccessRequestScreenState();
+  ConsumerState<CreateAccessRequestScreen> createState() => _CreateAccessRequestScreenState();
 }
 
-class _CreateAccessRequestScreenState extends State<CreateAccessRequestScreen> {
+class _CreateAccessRequestScreenState extends ConsumerState<CreateAccessRequestScreen> {
   final _formKey = GlobalKey<FormState>();
   final _employeeCtrl = TextEditingController();
   final _accessTypeCtrl = TextEditingController();
@@ -27,7 +27,6 @@ class _CreateAccessRequestScreenState extends State<CreateAccessRequestScreen> {
   void _submit() {
     if (!_formKey.currentState!.validate()) return;
 
-    final cubit = context.read<AccessRequestsCubit>();
     final now = DateTime.now();
     final item = AccessRequest(
       id: now.microsecondsSinceEpoch.toString(),
@@ -37,7 +36,7 @@ class _CreateAccessRequestScreenState extends State<CreateAccessRequestScreen> {
       createdAt: now,
       isApproved: false,
     );
-    cubit.add(item);
+    ref.read(accessRequestsProvider.notifier).add(item);
     Navigator.of(context).pop();
   }
 

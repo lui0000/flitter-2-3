@@ -1,50 +1,43 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import '../cubit/access_requests_cubit.dart';
-import '../cubit/access_requests_state.dart' as cubit_state;
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../providers/access_requests_provider.dart';
 import '../widgets/access_request_table.dart';
 import '../screens/create_access_request_screen.dart';
 
-class AccessRequestsView extends StatelessWidget {
+class AccessRequestsView extends ConsumerWidget {
   const AccessRequestsView({super.key});
 
-  void _deleteWithUndo(BuildContext context, String id) {
-    context.read<AccessRequestsCubit>().remove(id);
+  void _deleteWithUndo(BuildContext context, WidgetRef ref, String id) {
+    ref.read(accessRequestsProvider.notifier).remove(id);
     ScaffoldMessenger.of(context).clearSnackBars();
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: const Text('Заявка удалена'),
         action: SnackBarAction(
           label: 'Отменить',
-          onPressed: () => context.read<AccessRequestsCubit>().undoRemove(),
+          onPressed: () => ref.read(accessRequestsProvider.notifier).undoRemove(),
         ),
       ),
     );
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final state = ref.watch(accessRequestsProvider);
+
     return Scaffold(
       appBar: AppBar(title: const Text('Система выдачи доступов')),
-      body: BlocBuilder<AccessRequestsCubit, cubit_state.AccessRequestsState>(
-        bloc: context.read<AccessRequestsCubit>(),
-        builder: (context, state) {
-          return AccessRequestTable(
-            items: state.items,
-            onToggleApproval: (id) => context.read<AccessRequestsCubit>().toggleApproval(id),
-            onDelete: (id) => _deleteWithUndo(context, id),
-            onItemTap: null,
-          );
-        },
+      body: AccessRequestTable(
+        items: state.items,
+        onToggleApproval: (id) => ref.read(accessRequestsProvider.notifier).toggleApproval(id),
+        onDelete: (id) => _deleteWithUndo(context, ref, id),
+        onItemTap: null,
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           Navigator.of(context).push(
             MaterialPageRoute(
-              builder: (_) => BlocProvider.value(
-                value: context.read<AccessRequestsCubit>(),
-                child: const CreateAccessRequestScreen(),
-              ),
+              builder: (_) => const CreateAccessRequestScreen(),
             ),
           );
         },

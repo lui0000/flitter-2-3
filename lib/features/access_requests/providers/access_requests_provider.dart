@@ -1,13 +1,36 @@
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../models/access_request.dart';
-import 'access_requests_state.dart';
 
-class AccessRequestsCubit extends Cubit<AccessRequestsState> {
-  AccessRequestsCubit() : super(const AccessRequestsState(items: []));
+class AccessRequestsState {
+  final List<AccessRequest> items;
+  final AccessRequest? lastRemoved;
+  final int? lastRemovedIndex;
+
+  const AccessRequestsState({
+    required this.items,
+    this.lastRemoved,
+    this.lastRemovedIndex,
+  });
+
+  AccessRequestsState copyWith({
+    List<AccessRequest>? items,
+    AccessRequest? lastRemoved,
+    int? lastRemovedIndex,
+  }) {
+    return AccessRequestsState(
+      items: items ?? this.items,
+      lastRemoved: lastRemoved,
+      lastRemovedIndex: lastRemovedIndex,
+    );
+  }
+}
+
+class AccessRequestsNotifier extends StateNotifier<AccessRequestsState> {
+  AccessRequestsNotifier() : super(const AccessRequestsState(items: []));
 
   void add(AccessRequest item) {
     final updatedItems = List<AccessRequest>.from(state.items)..add(item);
-    emit(state.copyWith(items: updatedItems));
+    state = state.copyWith(items: updatedItems);
   }
 
   void toggleApproval(String id) {
@@ -17,7 +40,7 @@ class AccessRequestsCubit extends Cubit<AccessRequestsState> {
       }
       return item;
     }).toList();
-    emit(state.copyWith(items: updatedItems));
+    state = state.copyWith(items: updatedItems);
   }
 
   void remove(String id) {
@@ -27,11 +50,11 @@ class AccessRequestsCubit extends Cubit<AccessRequestsState> {
     final removedItem = state.items[index];
     final updatedItems = List<AccessRequest>.from(state.items)..removeAt(index);
 
-    emit(state.copyWith(
+    state = state.copyWith(
       items: updatedItems,
       lastRemoved: removedItem,
       lastRemovedIndex: index,
-    ));
+    );
   }
 
   void undoRemove() {
@@ -41,10 +64,15 @@ class AccessRequestsCubit extends Cubit<AccessRequestsState> {
     final updatedItems = List<AccessRequest>.from(state.items)
       ..insert(insertIndex, state.lastRemoved!);
 
-    emit(state.copyWith(
+    state = state.copyWith(
       items: updatedItems,
       lastRemoved: null,
       lastRemovedIndex: null,
-    ));
+    );
   }
 }
+
+final accessRequestsProvider = StateNotifierProvider<AccessRequestsNotifier, AccessRequestsState>(
+  (ref) => AccessRequestsNotifier(),
+);
+
