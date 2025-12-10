@@ -5,16 +5,8 @@ import '../../domain/repositories/access_request_repository.dart';
 import '../datasources/access_request_local_data_source.dart';
 import '../models/access_request_model.dart';
 
-/// Реализация репозитория запросов доступа
-/// 
-/// Координирует работу с различными источниками данных
-/// Обрабатывает ошибки и преобразует их в Failure
-/// Скрывает технические детали от Domain Layer
 class AccessRequestRepositoryImpl implements AccessRequestRepository {
   final AccessRequestLocalDataSource localDataSource;
-  // В будущем можно добавить:
-  // final AccessRequestRemoteDataSource remoteDataSource;
-  // final NetworkInfo networkInfo;
 
   AccessRequestRepositoryImpl({
     required this.localDataSource,
@@ -24,7 +16,6 @@ class AccessRequestRepositoryImpl implements AccessRequestRepository {
   Future<Either<Failure, List<AccessRequestEntity>>> getAllRequests() async {
     try {
       final requests = await localDataSource.getAll();
-      // Модели автоматически преобразуются в Entity (т.к. Model extends Entity)
       return Right(requests);
     } catch (e) {
       return Left(CacheFailure('Не удалось получить запросы: ${e.toString()}'));
@@ -48,7 +39,6 @@ class AccessRequestRepositoryImpl implements AccessRequestRepository {
     required String description,
   }) async {
     try {
-      // Создаем модель запроса
       final request = AccessRequestModel(
         id: DateTime.now().microsecondsSinceEpoch.toString(),
         employee: employee,
@@ -68,10 +58,9 @@ class AccessRequestRepositoryImpl implements AccessRequestRepository {
   @override
   Future<Either<Failure, void>> approveRequest(String id) async {
     try {
-      // Получаем текущий запрос
+
       final currentRequest = await localDataSource.getById(id);
-      
-      // Создаем обновленную версию
+
       final updatedRequest = AccessRequestModel(
         id: currentRequest.id,
         employee: currentRequest.employee,
@@ -91,10 +80,7 @@ class AccessRequestRepositoryImpl implements AccessRequestRepository {
   @override
   Future<Either<Failure, void>> rejectRequest(String id) async {
     try {
-      // Получаем текущий запрос
       final currentRequest = await localDataSource.getById(id);
-      
-      // Создаем обновленную версию
       final updatedRequest = AccessRequestModel(
         id: currentRequest.id,
         employee: currentRequest.employee,
@@ -124,7 +110,6 @@ class AccessRequestRepositoryImpl implements AccessRequestRepository {
   @override
   Future<Either<Failure, void>> undoDelete() async {
     try {
-      // Вызываем метод undoDelete у локального источника данных
       final localSource = localDataSource as AccessRequestLocalDataSourceImpl;
       await localSource.undoDelete();
       return const Right(null);

@@ -8,11 +8,6 @@ import '../../domain/usecases/undo_delete_request.dart';
 import 'access_requests_event.dart';
 import 'access_requests_state.dart';
 
-/// Bloc для управления состоянием запросов доступа
-/// 
-/// Координирует работу Use Cases
-/// Не содержит бизнес-логику (она в Use Cases)
-/// Только управление состоянием UI
 class AccessRequestsBloc extends Bloc<AccessRequestsEvent, AccessRequestsState> {
   final GetAllAccessRequests getAllAccessRequests;
   final usecases.CreateAccessRequest createAccessRequestUseCase;
@@ -34,7 +29,6 @@ class AccessRequestsBloc extends Bloc<AccessRequestsEvent, AccessRequestsState> 
     on<UndoDeleteAccessRequest>(_onUndoDeleteAccessRequest);
   }
 
-  /// Обработчик загрузки запросов
   Future<void> _onLoadAccessRequests(
     LoadAccessRequests event,
     Emitter<AccessRequestsState> emit,
@@ -49,7 +43,6 @@ class AccessRequestsBloc extends Bloc<AccessRequestsEvent, AccessRequestsState> 
     );
   }
 
-  /// Обработчик создания запроса
   Future<void> _onCreateAccessRequest(
     CreateAccessRequest event,
     Emitter<AccessRequestsState> emit,
@@ -68,13 +61,13 @@ class AccessRequestsBloc extends Bloc<AccessRequestsEvent, AccessRequestsState> 
       (failure) async => emit(AccessRequestsError(failure.message)),
       (_) async {
         emit(AccessRequestCreated());
-        // Перезагружаем список
+
         add(LoadAccessRequests());
       },
     );
   }
 
-  /// Обработчик одобрения запроса
+
   Future<void> _onApproveAccessRequest(
     ApproveAccessRequest event,
     Emitter<AccessRequestsState> emit,
@@ -88,13 +81,13 @@ class AccessRequestsBloc extends Bloc<AccessRequestsEvent, AccessRequestsState> 
       (failure) async => emit(AccessRequestsError(failure.message)),
       (_) async {
         emit(AccessRequestApproved());
-        // Перезагружаем список
+
         add(LoadAccessRequests());
       },
     );
   }
 
-  /// Обработчик удаления запроса
+
   Future<void> _onDeleteAccessRequest(
     DeleteAccessRequest event,
     Emitter<AccessRequestsState> emit,
@@ -108,13 +101,13 @@ class AccessRequestsBloc extends Bloc<AccessRequestsEvent, AccessRequestsState> 
       (failure) async => emit(AccessRequestsError(failure.message)),
       (_) async {
         emit(const AccessRequestDeleted(canUndo: true));
-        // Перезагружаем список
+
         add(LoadAccessRequests());
       },
     );
   }
 
-  /// Обработчик отмены удаления
+
   Future<void> _onUndoDeleteAccessRequest(
     UndoDeleteAccessRequest event,
     Emitter<AccessRequestsState> emit,
@@ -126,7 +119,6 @@ class AccessRequestsBloc extends Bloc<AccessRequestsEvent, AccessRequestsState> 
     await result.fold(
       (failure) async => emit(AccessRequestsError(failure.message)),
       (_) async {
-        // Перезагружаем список
         add(LoadAccessRequests());
       },
     );
