@@ -1,9 +1,7 @@
 import 'package:flutter/foundation.dart';
 import '../models/system_user.dart';
 
-/// Хранилище состояния пользователей
 class UsersState extends ChangeNotifier {
-  // Список пользователей с тестовыми данными
   final List<SystemUser> _users = [
     SystemUser(
       id: '1',
@@ -34,10 +32,8 @@ class UsersState extends ChangeNotifier {
     ),
   ];
 
-  // Геттер списка пользователей
   List<SystemUser> get users => List.unmodifiable(_users);
 
-  /// Добавление пользователя
   void addUser({
     required String name,
     required String email,
@@ -57,7 +53,6 @@ class UsersState extends ChangeNotifier {
     notifyListeners();
   }
 
-  /// Переключение активности пользователя
   void toggleActive(String id) {
     final index = _users.indexWhere((u) => u.id == id);
     if (index == -1) return;
@@ -67,13 +62,11 @@ class UsersState extends ChangeNotifier {
     notifyListeners();
   }
 
-  /// Удаление пользователя
   void removeUser(String id) {
     _users.removeWhere((u) => u.id == id);
     notifyListeners();
   }
 
-  /// Поиск пользователей по имени
   List<SystemUser> search(String query) {
     if (query.isEmpty) return users;
     final q = query.toLowerCase();

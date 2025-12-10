@@ -3,7 +3,6 @@ import 'package:provider/provider.dart';
 import '../state/users_state.dart';
 import '../models/system_user.dart';
 
-/// Экран управления пользователями
 class UsersScreen extends StatefulWidget {
   const UsersScreen({super.key});
 

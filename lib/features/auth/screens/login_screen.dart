@@ -3,7 +3,6 @@ import 'package:provider/provider.dart';
 import '../state/auth_state.dart';
 import '../../../app_router.dart';
 
-/// Экран авторизации и регистрации
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
 
@@ -17,8 +16,7 @@ class _LoginScreenState extends State<LoginScreen> {
   final _passwordCtrl = TextEditingController();
   final _nameCtrl = TextEditingController();
   
-  bool _isRegister = false; // Переключатель: вход / регистрация
-
+  bool _isRegister = false;
   @override
   void dispose() {
     _emailCtrl.dispose();
@@ -47,7 +45,6 @@ class _LoginScreenState extends State<LoginScreen> {
     }
 
     if (success && mounted) {
-      // Успешный вход - переходим на главный экран
       Navigator.pushReplacementNamed(context, AppRoutes.home);
     } else if (mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -71,7 +68,6 @@ class _LoginScreenState extends State<LoginScreen> {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  // Заголовок
                   Icon(
                     Icons.security,
                     size: 64,
@@ -83,8 +79,6 @@ class _LoginScreenState extends State<LoginScreen> {
                     style: Theme.of(context).textTheme.headlineMedium,
                   ),
                   const SizedBox(height: 32),
-
-                  // Поле имени (только при регистрации)
                   if (_isRegister) ...[
                     TextFormField(
                       controller: _nameCtrl,
@@ -97,8 +91,6 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                     const SizedBox(height: 16),
                   ],
-
-                  // Email
                   TextFormField(
                     controller: _emailCtrl,
                     decoration: const InputDecoration(
@@ -110,8 +102,6 @@ class _LoginScreenState extends State<LoginScreen> {
                         (v == null || v.trim().isEmpty) ? 'Введите email' : null,
                   ),
                   const SizedBox(height: 16),
-
-                  // Пароль
                   TextFormField(
                     controller: _passwordCtrl,
                     decoration: const InputDecoration(
@@ -124,8 +114,6 @@ class _LoginScreenState extends State<LoginScreen> {
                         : null,
                   ),
                   const SizedBox(height: 24),
-
-                  // Кнопка входа/регистрации
                   SizedBox(
                     width: double.infinity,
                     child: FilledButton(
@@ -140,8 +128,6 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                   ),
                   const SizedBox(height: 12),
-
-                  // Переключатель вход/регистрация
                   TextButton(
                     onPressed: () => setState(() => _isRegister = !_isRegister),
                     child: Text(
