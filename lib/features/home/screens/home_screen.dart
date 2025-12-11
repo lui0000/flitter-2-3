@@ -36,12 +36,12 @@ class HomeScreen extends StatelessWidget {
             ),
             const SizedBox(height: 24),
 
-            // Сетка меню
             Expanded(
               child: GridView.count(
                 crossAxisCount: 2,
                 mainAxisSpacing: 16,
                 crossAxisSpacing: 16,
+                childAspectRatio: 1.1,
                 children: [
                   _MenuCard(
                     icon: Icons.assignment,
@@ -84,6 +84,12 @@ class HomeScreen extends StatelessWidget {
                     title: 'Настройки',
                     subtitle: 'Параметры системы',
                     onTap: () => Navigator.pushNamed(context, AppRoutes.settings),
+                  ),
+                  _MenuCard(
+                    icon: Icons.api,
+                    title: 'API Демо',
+                    subtitle: '35+ сетевых запросов',
+                    onTap: () => Navigator.pushNamed(context, AppRoutes.apiDemo),
                   ),
                 ],
               ),

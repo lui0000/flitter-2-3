@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-// Экраны
 import 'features/auth/screens/login_screen.dart';
 import 'features/access_requests/screens/access_requests_screen.dart';
 import 'features/access_requests/screens/create_access_request_screen.dart';
@@ -11,8 +10,8 @@ import 'features/profile/screens/profile_screen.dart';
 import 'features/audit/screens/audit_screen.dart';
 import 'features/settings/screens/settings_screen.dart';
 import 'features/home/screens/home_screen.dart';
+import 'features/demo/screens/api_demo_screen.dart';
 
-/// Класс маршрутов приложения
 class AppRoutes {
   static const String login = '/login';
   static const String home = '/';
@@ -24,6 +23,7 @@ class AppRoutes {
   static const String profile = '/profile';
   static const String audit = '/audit';
   static const String settings = '/settings';
+  static const String apiDemo = '/api-demo';
 }
 
 /// Генератор маршрутов
@@ -59,6 +59,9 @@ class AppRouter {
 
       case AppRoutes.settings:
         return MaterialPageRoute(builder: (_) => const SettingsScreen());
+
+      case AppRoutes.apiDemo:
+        return MaterialPageRoute(builder: (_) => const ApiDemoScreen());
 
       default:
         return MaterialPageRoute(
