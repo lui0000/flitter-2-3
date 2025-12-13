@@ -1,27 +1,27 @@
-import '../models/access_request_model.dart';
+import 'api/dto/access_request_dto.dart';
 
 abstract class AccessRequestLocalDataSource {
-  Future<List<AccessRequestModel>> getAll();
-  Future<AccessRequestModel> getById(String id);
-  Future<void> save(AccessRequestModel request);
-  Future<void> update(AccessRequestModel request);
+  Future<List<AccessRequestDTO>> getAll();
+  Future<AccessRequestDTO> getById(String id);
+  Future<void> save(AccessRequestDTO request);
+  Future<void> update(AccessRequestDTO request);
   Future<void> delete(String id);
   Future<void> clear();
 }
 
 class AccessRequestLocalDataSourceImpl implements AccessRequestLocalDataSource {
-  final List<AccessRequestModel> _storage = [];
-  AccessRequestModel? _lastDeleted;
+  final List<AccessRequestDTO> _storage = [];
+  AccessRequestDTO? _lastDeleted;
   int? _lastDeletedIndex;
 
   @override
-  Future<List<AccessRequestModel>> getAll() async {
+  Future<List<AccessRequestDTO>> getAll() async {
     await Future.delayed(const Duration(milliseconds: 100));
     return List.unmodifiable(_storage);
   }
 
   @override
-  Future<AccessRequestModel> getById(String id) async {
+  Future<AccessRequestDTO> getById(String id) async {
     await Future.delayed(const Duration(milliseconds: 50));
     
     try {
@@ -32,7 +32,7 @@ class AccessRequestLocalDataSourceImpl implements AccessRequestLocalDataSource {
   }
 
   @override
-  Future<void> save(AccessRequestModel request) async {
+  Future<void> save(AccessRequestDTO request) async {
     await Future.delayed(const Duration(milliseconds: 100));
     
     final existingIndex = _storage.indexWhere((r) => r.id == request.id);
@@ -44,7 +44,7 @@ class AccessRequestLocalDataSourceImpl implements AccessRequestLocalDataSource {
   }
 
   @override
-  Future<void> update(AccessRequestModel request) async {
+  Future<void> update(AccessRequestDTO request) async {
     await Future.delayed(const Duration(milliseconds: 100));
     
     final index = _storage.indexWhere((r) => r.id == request.id);

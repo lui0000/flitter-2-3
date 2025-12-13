@@ -3,7 +3,8 @@ import '../../../../core/error/failures.dart';
 import '../../domain/entities/access_request_entity.dart';
 import '../../domain/repositories/access_request_repository.dart';
 import '../datasources/access_request_local_data_source.dart';
-import '../models/access_request_model.dart';
+import '../datasources/api/dto/access_request_dto.dart';
+import '../datasources/api/mappers/access_request_mapper.dart';
 
 class AccessRequestRepositoryImpl implements AccessRequestRepository {
   final AccessRequestLocalDataSource localDataSource;
@@ -15,8 +16,9 @@ class AccessRequestRepositoryImpl implements AccessRequestRepository {
   @override
   Future<Either<Failure, List<AccessRequestEntity>>> getAllRequests() async {
     try {
-      final requests = await localDataSource.getAll();
-      return Right(requests);
+      final dtoList = await localDataSource.getAll();
+      final entities = AccessRequestMapper.toEntityList(dtoList);
+      return Right(entities);
     } catch (e) {
       return Left(CacheFailure('Не удалось получить запросы: ${e.toString()}'));
     }
@@ -25,8 +27,9 @@ class AccessRequestRepositoryImpl implements AccessRequestRepository {
   @override
   Future<Either<Failure, AccessRequestEntity>> getRequestById(String id) async {
     try {
-      final request = await localDataSource.getById(id);
-      return Right(request);
+      final dto = await localDataSource.getById(id);
+      final entity = AccessRequestMapper.toEntity(dto);
+      return Right(entity);
     } catch (e) {
       return Left(CacheFailure('Запрос не найден: ${e.toString()}'));
     }
@@ -39,16 +42,16 @@ class AccessRequestRepositoryImpl implements AccessRequestRepository {
     required String description,
   }) async {
     try {
-      final request = AccessRequestModel(
+      final dto = AccessRequestDTO(
         id: DateTime.now().microsecondsSinceEpoch.toString(),
         employee: employee,
         accessType: accessType,
         description: description,
-        createdAt: DateTime.now(),
+        createdAt: DateTime.now().toIso8601String(),
         isApproved: false,
       );
 
-      await localDataSource.save(request);
+      await localDataSource.save(dto);
       return const Right(null);
     } catch (e) {
       return Left(CacheFailure('Не удалось создать запрос: ${e.toString()}'));
@@ -59,18 +62,18 @@ class AccessRequestRepositoryImpl implements AccessRequestRepository {
   Future<Either<Failure, void>> approveRequest(String id) async {
     try {
 
-      final currentRequest = await localDataSource.getById(id);
+      final currentDto = await localDataSource.getById(id);
 
-      final updatedRequest = AccessRequestModel(
-        id: currentRequest.id,
-        employee: currentRequest.employee,
-        accessType: currentRequest.accessType,
-        description: currentRequest.description,
-        createdAt: currentRequest.createdAt,
+      final updatedDto = AccessRequestDTO(
+        id: currentDto.id,
+        employee: currentDto.employee,
+        accessType: currentDto.accessType,
+        description: currentDto.description,
+        createdAt: currentDto.createdAt,
         isApproved: true,
       );
 
-      await localDataSource.update(updatedRequest);
+      await localDataSource.update(updatedDto);
       return const Right(null);
     } catch (e) {
       return Left(CacheFailure('Не удалось одобрить запрос: ${e.toString()}'));
@@ -80,17 +83,17 @@ class AccessRequestRepositoryImpl implements AccessRequestRepository {
   @override
   Future<Either<Failure, void>> rejectRequest(String id) async {
     try {
-      final currentRequest = await localDataSource.getById(id);
-      final updatedRequest = AccessRequestModel(
-        id: currentRequest.id,
-        employee: currentRequest.employee,
-        accessType: currentRequest.accessType,
-        description: currentRequest.description,
-        createdAt: currentRequest.createdAt,
+      final currentDto = await localDataSource.getById(id);
+      final updatedDto = AccessRequestDTO(
+        id: currentDto.id,
+        employee: currentDto.employee,
+        accessType: currentDto.accessType,
+        description: currentDto.description,
+        createdAt: currentDto.createdAt,
         isApproved: false,
       );
 
-      await localDataSource.update(updatedRequest);
+      await localDataSource.update(updatedDto);
       return const Right(null);
     } catch (e) {
       return Left(CacheFailure('Не удалось отклонить запрос: ${e.toString()}'));
@@ -118,5 +121,3 @@ class AccessRequestRepositoryImpl implements AccessRequestRepository {
     }
   }
 }
-
-
